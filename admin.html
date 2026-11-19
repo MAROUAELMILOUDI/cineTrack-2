@@ -19,12 +19,54 @@
             <div class="mx-auto flex max-w-6xl items-center justify-between gap-3 px-6 py-3">
                 <img src="./img/logo.svg" alt="Logo de CinéTrack" class="h-10 w-auto">
                 <div class="flex items-center gap-3">
-                    <a href="index.html" class="bg-gray-950 border border-gray-700 text-sm sm:text-base p-2.5 rounded-lg shadow text-white hover:bg-red-600">
-                       Catalogue
+                    <a href="index.html" class="bg-red-600/60 border border-gray-700 text-sm sm:text-base p-2.5 rounded-lg shadow text-white hover:bg-red-600">
+                       Catalog
                     </a>
                 </div>
             </div>
         </header>
+        <div class="relative px-4 py-10 text-white">
+            <form class="mx-auto max-w-7xl rounded-xl border border-slate-700 bg-slate-800 p-6">
+                <h2 class="text-lg font-bold">Add a movie or a series</h2>
+                <p class="mb-4 border-b border-slate-700 pb-4 text-xs text-slate-400">
+                    Fill in the details of the title to add.
+                </p>
+                <div class="grid gap-4 sm:grid-cols-3">
+                    <div class="sm:col-span-2">
+                        <label class="mb-1 block text-xs font-semibold">Title *</label>
+                        <input type="text" placeholder="Ex: Inception" class="w-full rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm placeholder-slate-500 focus:border-red-500 focus:outline-none"/>
+                    </div>
+                    <div>
+                        <label class="mb-1 block text-xs font-semibold">Type *</label>
+                        <select class="w-full rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm focus:border-red-500 focus:outline-none">
+                            <option>Movie</option>
+                            <option>Series</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="mb-1 block text-xs font-semibold">Year *</label>
+                        <input type="number" placeholder="Ex: 2010" class="w-full rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm placeholder-slate-500 focus:border-red-500 focus:outline-none"/>
+                    </div>
+                    <div>
+                        <label class="mb-1 block text-xs font-semibold">Duration (min) *</label>
+                        <input type="number" placeholder="Ex: 148" class="w-full rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm placeholder-slate-500 focus:border-red-500 focus:outline-none"/>
+                    </div>
+                    <div>
+                        <label class="mb-1 block text-xs font-semibold">Poster URL *</label>
+                        <input type="url" placeholder="https://..." class="w-full rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm placeholder-slate-500 focus:border-red-500 focus:outline-none"/>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <label class="mb-1 block text-xs font-semibold">Description</label>
+                    <textarea rows="3" placeholder="Synopsis of the movie or series..." class="w-full rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm placeholder-slate-500 focus:border-red-500 focus:outline-none"></textarea>
+                </div>
+                <div class="mt-4 flex justify-end border-t border-slate-700 pt-4">
+                    <button type="submit"class="rounded-md bg-red-600 px-4 py-2 text-sm font-semibold hover:bg-red-700">
+                        Add title
+                    </button>
+                </div>
+            </form>
+        </div>
     </section>
 </body>
 </html>
