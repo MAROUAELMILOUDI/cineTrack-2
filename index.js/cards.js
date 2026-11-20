@@ -2,6 +2,9 @@ import { initialiser } from "./api.js";
 import { handelFiltrer } from "./recherche-filtrer.js";
 import { handelFvv, isFav, updateHeart } from "./favoris.js";
 import { renderPage } from "./pagination.js";
+import { addComment } from "../comments/com.js";
+
+
 //affichage des cards:
 const container = document.getElementById("cards-container");
 const modal = document.getElementById("modal");
@@ -57,7 +60,12 @@ function afficherModal(movie) {
         <p class="mb-2"><b>Directors :</b> ${movie.directors.join(", ")}</p>
         <p class="mb-2"><b>Countries :</b> ${movie.productionCountries.join(", ")}</p>
         <p><b>${movie.duration ? "Duration :" : "Seasons :"}</b>${movie.duration ? movie.duration + " minutes" : movie.seasons.length}</p>
+        <button id="com-btn" class="rounded-md bg-red-600 px-4 py-2 text-sm font-semibold hover:bg-red-700 ml-72">Share your review</button>
     `;
+    document.getElementById("com-list").innerHTML = "";
+    document.getElementById("modal-wrapper").classList.remove("justify-start");
+    document.getElementById("modal-wrapper").classList.add("justify-center");
+    document.getElementById("com-panel").classList.add("hidden");
     modal.classList.remove("hidden");
 }
 
