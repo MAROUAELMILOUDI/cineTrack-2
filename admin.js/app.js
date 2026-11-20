@@ -81,12 +81,12 @@ async function saveMovie(e) {
     type: typeInput.value,
     releaseYear: Number(yearInput.value),
     duration: Number(durationInput.value),
-    seasons: Number(seasonsInput.value),
+    seasons: [seasonsInput.value],
     image: posterInput.value,
     description: descriptionInput.value,
     genres: [genresInput.value],
     directors: [directorsInput.value],
-    countries: [countriesInput.value]
+    productionCountries: [countriesInput.value]
   };
   const url = editId ? `${API_URL}/${editId}` : API_URL;
   const method = editId ? 'PUT' : 'POST';
@@ -129,7 +129,7 @@ tbody.addEventListener('click', async (e) => {
     descriptionInput.value = movie.description;
     genresInput.value = movie.genres;
     directorsInput.value = movie.directors;
-    countriesInput.value = movie.countries;
+    countriesInput.value = movie.productionCountries;
     showFields();
     editId = id;
     submitBtn.textContent = 'Save';
