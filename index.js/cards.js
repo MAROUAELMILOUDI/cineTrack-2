@@ -9,6 +9,7 @@ const modal = document.getElementById("modal");
 const modalBody = document.getElementById("modal-body");
 const closeBtn = document.querySelector(".close-btn");
 let movies = [];
+let currentContentId = null;
 
 export async function afficherCards(data, page = 1, perPage = 8) {
     const pagination = document.getElementById("pagination");
@@ -50,6 +51,7 @@ export async function afficherCards(data, page = 1, perPage = 8) {
 }
 
 function afficherModal(movie) {
+    modal.dataset.contentId = movie.id;
     const genresText = Array.isArray(movie.genres) ? movie.genres.join(", ") : movie.genres || "";
     const directorsText = Array.isArray(movie.directors) ? movie.directors.join(", ") : movie.directors || "";
     const countriesText = Array.isArray(movie.productionCountries)

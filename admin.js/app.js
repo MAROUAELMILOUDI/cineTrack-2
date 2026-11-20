@@ -20,17 +20,6 @@ const countriesInput = document.querySelector('#countries');
 
 let editId = null;
 
-function toList(value) {
-  return String(value || '')
-    .split(',')
-    .map((item) => item.trim())
-    .filter(Boolean);
-}
-
-function fromList(value) {
-  if (Array.isArray(value)) return value.join(', ');
-  return value || '';
-}
 
 function showFields() {
   if (typeInput.value === 'Series') {
@@ -90,30 +79,28 @@ loadMovies();
 
 async function saveMovie(e) {
   e.preventDefault();
-  const isSeries = typeInput.value === 'Series';
-
+  const url = editId ? `${API_URL}/${editId}` : API_URL;
+  const method = editId ? 'PUT' : 'POST';
+  const successText = editId ? 'movie updated' : 'movie added';
   const movie = {
     title: titleInput.value.trim(),
     type: typeInput.value,
     releaseYear: Number(yearInput.value),
-    duration: isSeries ? 0 : Number(durationInput.value),
-    seasons: isSeries ? toList(seasonsInput.value) : [],
-    image: posterInput.value.trim(),
-    description: descriptionInput.value.trim(),
-    genres: toList(genresInput.value),
-    directors: toList(directorsInput.value),
-    productionCountries: toList(countriesInput.value),
+    duration: Number(durationInput.value),
+    seasons: Number(seasonsInput.value),
+    image: posterInput.value,
+    description: descriptionInput.value,
+    genres: [genresInput.value],
+    directors: [directorsInput.value],
+    countries: [countriesInput.value]
   };
 
-  const url = editId ? `${API_URL}/${editId}` : API_URL;
-  const method = editId ? 'PUT' : 'POST';
-  const successText = editId ? 'movie updated' : 'movie added';
 
   try {
     const res = await fetch(url, {
-      method,
+      method: method,
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(movie),
+      body: JSON.stringify(movie)
     });
     if (!res.ok) throw new Error(`Error ${res.status}`);
     form.reset();
@@ -141,12 +128,12 @@ tbody.addEventListener('click', async (e) => {
     showFields();
     yearInput.value = movie.releaseYear || '';
     durationInput.value = movie.duration || '';
-    seasonsInput.value = fromList(movie.seasons);
+    seasonsInput.value = movie.seasons;
     posterInput.value = movie.image || '';
     descriptionInput.value = movie.description || '';
-    genresInput.value = fromList(movie.genres);
-    directorsInput.value = fromList(movie.directors);
-    countriesInput.value = fromList(movie.productionCountries);
+    genresInput.value = movie.genres;
+    directorsInput.value = movie.directors;
+    countriesInput.value = movie.productionCountries;
     editId = id;
     submitBtn.textContent = 'Save';
     titleInput.focus();

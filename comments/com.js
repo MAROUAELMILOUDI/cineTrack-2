@@ -1,3 +1,6 @@
+const COMMENTS_API = "https://6afca705892984c4494bd59c.mockapi.io/api/v1/comments";
+const currentContentId = document.getElementById("modal").dataset.contentId;
+
 const modalBody = document.getElementById("modal-body");
 const wrapper = document.getElementById("modal-wrapper");
 const panel = document.getElementById("com-panel");
@@ -9,7 +12,9 @@ modalBody.addEventListener("click", (e) => {
         wrapper.classList.remove("justify-center");
         wrapper.classList.add("justify-start");
         panel.classList.remove("hidden");
+        loadComments();
     }
+
 });
 
 form.addEventListener("submit", (e) => {
@@ -44,4 +49,33 @@ export function addComment({ name, rating, text }) {
     top.append(nameEl, stars);
     item.append(top, textEl);
     list.prepend(item);
+}
+
+async function loadComments() {
+    try {
+        const res = await fetch(COMMENTS_API);
+
+        if (!res.ok) {
+            throw new Error(`Error ${res.status}`);
+        }
+
+        const comments = await res.json();
+
+        list.innerHTML = "";
+
+        const contentComments = comments.filter(
+            comment => comment.contentId === String(currentContentId)
+        );
+
+        contentComments.forEach(comment => {
+            addComment({
+                name: comment.author,
+                rating: comment.rating,
+                text: comment.text
+            });
+        });
+
+    } catch (error) {
+        console.error("Error loading comments:", error);
+    }
 }
