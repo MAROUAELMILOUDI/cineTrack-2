@@ -1,4 +1,4 @@
-const API_URL = "https://raw.githubusercontent.com/ouchad97/cinetrack-api/main/cinetrack-data.json";
+const API_URL = "https://6afca705892984c4494bd59c.mockapi.io/api/v1/contents";
 async function chargeData() {
     try {
         const response = await fetch(API_URL);
@@ -15,14 +15,18 @@ async function chargeData() {
 }
 
 async function initialiser() {
+    const data = await chargeData();
+    if (data.length > 0) {
+        return data;
+    }
     const donnees = localStorage.getItem("movies");
-    if(donnees){
-        try{
+    if (donnees) {
+        try {
             return JSON.parse(donnees);
-        }catch(error){
-            console.error("Corrupt local storage data, resetting...");
+        } catch (error) {
+            console.error("Corrupt local storage data");
         }
     }
-    return await chargeData();
+    return [];
 }
 export { initialiser }

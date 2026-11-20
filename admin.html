@@ -26,7 +26,7 @@
             </div>
         </header>
         <div class="relative px-4 py-10 text-white">
-            <form class="mx-auto max-w-7xl rounded-xl border border-slate-700 bg-slate-800 p-6">
+            <form id="movieForm" class="mx-auto max-w-7xl rounded-xl border border-slate-700 bg-slate-800 p-6">
                 <h2 class="text-lg font-bold">Add a movie or a series</h2>
                 <p class="mb-4 border-b border-slate-700 pb-4 text-xs text-slate-400">
                     Fill in the details of the title to add.
@@ -34,39 +34,73 @@
                 <div class="grid gap-4 sm:grid-cols-3">
                     <div class="sm:col-span-2">
                         <label class="mb-1 block text-xs font-semibold">Title *</label>
-                        <input type="text" placeholder="Ex: Inception" class="w-full rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm placeholder-slate-500 focus:border-red-500 focus:outline-none"/>
+                        <input type="text" id="title" placeholder="Ex: Inception" class="w-full rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm placeholder-slate-500 focus:border-red-500 focus:outline-none" required/>
                     </div>
                     <div>
                         <label class="mb-1 block text-xs font-semibold">Type *</label>
-                        <select class="w-full rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm focus:border-red-500 focus:outline-none">
+                        <select id="type" required class="w-full rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm focus:border-red-500 focus:outline-none">
                             <option>Movie</option>
                             <option>Series</option>
                         </select>
                     </div>
                     <div>
                         <label class="mb-1 block text-xs font-semibold">Year *</label>
-                        <input type="number" placeholder="Ex: 2010" class="w-full rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm placeholder-slate-500 focus:border-red-500 focus:outline-none"/>
+                        <input type="number" id="year" required placeholder="Ex: 2010" class="w-full rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm placeholder-slate-500 focus:border-red-500 focus:outline-none"/>
                     </div>
                     <div>
-                        <label class="mb-1 block text-xs font-semibold">Duration (min) *</label>
-                        <input type="number" placeholder="Ex: 148" class="w-full rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm placeholder-slate-500 focus:border-red-500 focus:outline-none"/>
+                        <div id="durationWrapper">
+                            <label class="mb-1 block text-xs font-semibold">Duration (min) *</label>
+                            <input type="number" id="duration" required placeholder="Ex: 148" class="w-full rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm placeholder-slate-500 focus:border-red-500 focus:outline-none"/>
+                        </div>
+                        <div id="seasonsWrapper" class="hidden">
+                            <label class="mb-1 block text-xs font-semibold">Seasons *</label>
+                            <input type="number" id="seasons" min="1" placeholder="Ex: 4" class="w-full rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm placeholder-slate-500 focus:border-red-500 focus:outline-none"/>
+                        </div>
                     </div>
                     <div>
                         <label class="mb-1 block text-xs font-semibold">Poster URL *</label>
-                        <input type="url" placeholder="https://..." class="w-full rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm placeholder-slate-500 focus:border-red-500 focus:outline-none"/>
+                        <input type="url" id="poster" required placeholder="https://..." class="w-full rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm placeholder-slate-500 focus:border-red-500 focus:outline-none"/>
+                    </div>
+                </div>
+                <div class="mt-4 grid gap-4 sm:grid-cols-3">
+                    <div>
+                        <label class="mb-1 block text-xs font-semibold">Genres *</label>
+                        <input type="text" id="genres" placeholder="Ex: Action, Drama" class="w-full rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm placeholder-slate-500 focus:border-red-500 focus:outline-none"/>
+                    </div>
+                    <div>
+                        <label class="mb-1 block text-xs font-semibold">Directors *</label>
+                        <input type="text" id="directors" placeholder="Ex: Christopher Nolan" class="w-full rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm placeholder-slate-500 focus:border-red-500 focus:outline-none"/>
+                    </div>
+                    <div>
+                        <label class="mb-1 block text-xs font-semibold">Countries *</label>
+                        <input type="text" id="countries" placeholder="Ex: USA, UK" class="w-full rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm placeholder-slate-500 focus:border-red-500 focus:outline-none"/>
                     </div>
                 </div>
                 <div class="mt-4">
-                    <label class="mb-1 block text-xs font-semibold">Description</label>
-                    <textarea rows="3" placeholder="Synopsis of the movie or series..." class="w-full rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm placeholder-slate-500 focus:border-red-500 focus:outline-none"></textarea>
+                    <label class="mb-1 block text-xs font-semibold">Description *</label>
+                    <textarea id="description" rows="3" placeholder="Synopsis of the movie or series..." class="w-full rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm placeholder-slate-500 focus:border-red-500 focus:outline-none"></textarea>
                 </div>
                 <div class="mt-4 flex justify-end border-t border-slate-700 pt-4">
-                    <button type="submit"class="rounded-md bg-red-600 px-4 py-2 text-sm font-semibold hover:bg-red-700">
+                    <button type="submit" id="submitBtn" class="rounded-md bg-red-600 px-4 py-2 text-sm font-semibold hover:bg-red-700">
                         Add title
                     </button>
                 </div>
             </form>
         </div>
     </section>
+    <p id="message" class="relative ml-28"></p>
+    <div id="table" class="relative hidden mx-auto max-w-7xl overflow-x-auto rounded-xl border border-slate-700 bg-slate-800 p-6 px-4 py-10">
+        <table id="moviesTable" class="w-full text-left text-sm">
+            <thead class="border-b border-slate-700 text-xs uppercase text-slate-400">
+                <tr>
+                    <th class="px-4 py-3 font-semibold">Movies/Series</th>
+                    <th class="px-4 py-3 font-semibold">Type</th>
+                    <th class="px-4 py-3 font-semibold text-right">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-700"></tbody>
+        </table>
+    </div>
+    <script src="./admin.js/app.js"></script>
 </body>
 </html>
