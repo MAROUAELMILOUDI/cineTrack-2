@@ -2,16 +2,13 @@ import { initialiser } from "./api.js";
 import { handelFiltrer } from "./recherche-filtrer.js";
 import { handelFvv, isFav, updateHeart } from "./favoris.js";
 import { renderPage } from "./pagination.js";
-import { addComment } from "../comments/com.js";
+import "../comments/com.js";
 
-
-//affichage des cards:
 const container = document.getElementById("cards-container");
 const modal = document.getElementById("modal");
 const modalBody = document.getElementById("modal-body");
 const closeBtn = document.querySelector(".close-btn");
 let movies = [];
-
 
 export async function afficherCards(data, page = 1, perPage = 8) {
     const pagination = document.getElementById("pagination");
@@ -23,11 +20,12 @@ export async function afficherCards(data, page = 1, perPage = 8) {
         pagination.innerHTML = "";
         return;
     }
+
     const start = (page - 1) * perPage;
     const pageData = data.slice(start, start + perPage);
 
-    pageData.forEach(movie => {
-       const card = document.createElement("div");
+    pageData.forEach((movie) => {
+        const card = document.createElement("div");
         card.className = "relative bg-gray-900 rounded-xl overflow-hidden cursor-pointer hover:scale-105 transition duration-300 shadow-lg hover:shadow-red-700";
         card.innerHTML = `
             <img src="${movie.image}" alt="${movie.title}" class="w-full h-64 object-cover">
@@ -47,20 +45,32 @@ export async function afficherCards(data, page = 1, perPage = 8) {
         card.addEventListener("click", () => afficherModal(movie));
         container.appendChild(card);
     });
+
     renderPage(data, page, perPage);
 }
 
 function afficherModal(movie) {
+    const genresText = Array.isArray(movie.genres) ? movie.genres.join(", ") : movie.genres || "";
+    const directorsText = Array.isArray(movie.directors) ? movie.directors.join(", ") : movie.directors || "";
+    const countriesText = Array.isArray(movie.productionCountries)
+        ? movie.productionCountries.join(", ")
+        : movie.productionCountries || "";
+
+    const isMovie = (movie.type || "").toLowerCase() === "movie" || Boolean(movie.duration);
+    const seasonsValue = Array.isArray(movie.seasons) ? movie.seasons.length : movie.seasons;
+    const lengthLabel = isMovie ? "Duration :" : "Seasons :";
+    const lengthValue = isMovie ? `${movie.duration || 0} minutes` : seasonsValue;
+
     modalBody.innerHTML = `
         <img src="${movie.image}" alt="${movie.title}" class="w-full h-64 object-cover rounded-lg mb-4">
         <h2 class="text-2xl font-bold mb-2">${movie.title}</h2>
         <p class="text-gray-400 mb-3">${movie.releaseYear} · ${movie.type}</p>
         <p class="mb-3">${movie.description}</p>
-        <p class="mb-2"><b>Genres :</b> ${movie.genres.join(", ")}</p>
-        <p class="mb-2"><b>Directors :</b> ${movie.directors.join(", ")}</p>
-        <p class="mb-2"><b>Countries :</b> ${movie.productionCountries.join(", ")}</p>
-        <p><b>${movie.duration ? "Duration :" : "Seasons :"}</b>${movie.duration ? movie.duration + " minutes" : movie.seasons.length}</p>
-        <button id="com-btn" class="rounded-md bg-red-600 px-4 py-2 text-sm font-semibold hover:bg-red-700 ml-72">Share your review</button>
+        <p class="mb-2"><b>Genres :</b> ${genresText}</p>
+        <p class="mb-2"><b>Directors :</b> ${directorsText}</p>
+        <p class="mb-2"><b>Countries :</b> ${countriesText}</p>
+        <p class="mb-4"><b>${lengthLabel}</b> ${lengthValue}</p>
+        <button id="com-btn" class="rounded-md bg-red-600 px-4 py-2 text-sm font-semibold hover:bg-red-700">Share your review</button>
     `;
     document.getElementById("com-list").innerHTML = "";
     document.getElementById("modal-wrapper").classList.remove("justify-start");
@@ -73,7 +83,7 @@ closeBtn.addEventListener("click", () => {
     modal.classList.add("hidden");
 });
 
-window.addEventListener("click", e => {
+window.addEventListener("click", (e) => {
     if (e.target === modal) {
         modal.classList.add("hidden");
     }
@@ -84,11 +94,11 @@ async function demarrer() {
     afficherCards(movies, 1, 8);
     const movieInput = document.getElementById("movies");
     const statutSelect = document.getElementById("statut");
-    if(movieInput){
+    if (movieInput) {
         movieInput.addEventListener("input", () => handelFiltrer(movies, afficherCards));
-    } 
-    if(statutSelect){
-        statutSelect.addEventListener("change", () => handelFiltrer(movies, afficherCards))
-    } 
+    }
+    if (statutSelect) {
+        statutSelect.addEventListener("change", () => handelFiltrer(movies, afficherCards));
+    }
 }
 demarrer();

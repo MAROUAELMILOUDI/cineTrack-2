@@ -18,26 +18,37 @@ const genresInput = document.querySelector('#genres');
 const directorsInput = document.querySelector('#directors');
 const countriesInput = document.querySelector('#countries');
 
-
 let editId = null;
 
-// movie = duration, series = seasons
+function toList(value) {
+  return String(value || '')
+    .split(',')
+    .map((item) => item.trim())
+    .filter(Boolean);
+}
+
+function fromList(value) {
+  if (Array.isArray(value)) return value.join(', ');
+  return value || '';
+}
+
 function showFields() {
   if (typeInput.value === 'Series') {
     durationWrapper.classList.add('hidden');
     seasonsWrapper.classList.remove('hidden');
     durationInput.required = false;
     seasonsInput.required = true;
+    durationInput.value = '';
   } else {
     seasonsWrapper.classList.add('hidden');
     durationWrapper.classList.remove('hidden');
     seasonsInput.required = false;
     durationInput.required = true;
+    seasonsInput.value = '';
   }
 }
 typeInput.addEventListener('change', showFields);
 
-// GET: fetch dyal data
 async function loadMovies() {
   message.textContent = 'loading...';
   try {
@@ -45,6 +56,7 @@ async function loadMovies() {
     if (!res.ok) throw new Error(`Error ${res.status}`);
     const movies = await res.json();
     tbody.innerHTML = '';
+
     for (const movie of movies) {
       const tr = document.createElement('tr');
       tr.dataset.id = movie.id;
@@ -55,7 +67,7 @@ async function loadMovies() {
         tr.appendChild(td);
       }
       const actions = document.createElement('td');
-      actions.className = 'px-4 py-3 text-right';
+      actions.className = 'px-4 py-3 text-right space-x-2';
       actions.innerHTML = `
         <button class="edit bg-slate-600 px-3 py-1 rounded text-xs">Edit</button>
         <button class="delete bg-red-600 px-3 py-1 rounded text-xs">Delete</button>
@@ -63,8 +75,11 @@ async function loadMovies() {
       tr.appendChild(actions);
       tbody.appendChild(tr);
     }
+
     if (movies.length > 0) {
       table.classList.remove('hidden');
+    } else {
+      table.classList.add('hidden');
     }
     message.textContent = '';
   } catch (err) {
@@ -73,30 +88,32 @@ async function loadMovies() {
 }
 loadMovies();
 
-// POST / PUT: modification o suppression dyal chi movie/serie
 async function saveMovie(e) {
   e.preventDefault();
+  const isSeries = typeInput.value === 'Series';
+
   const movie = {
     title: titleInput.value.trim(),
     type: typeInput.value,
     releaseYear: Number(yearInput.value),
-    duration: Number(durationInput.value),
-    seasons: [seasonsInput.value],
-    image: posterInput.value,
-    description: descriptionInput.value,
-    genres: [genresInput.value],
-    directors: [directorsInput.value],
-    productionCountries: [countriesInput.value]
+    duration: isSeries ? 0 : Number(durationInput.value),
+    seasons: isSeries ? toList(seasonsInput.value) : [],
+    image: posterInput.value.trim(),
+    description: descriptionInput.value.trim(),
+    genres: toList(genresInput.value),
+    directors: toList(directorsInput.value),
+    productionCountries: toList(countriesInput.value),
   };
+
   const url = editId ? `${API_URL}/${editId}` : API_URL;
   const method = editId ? 'PUT' : 'POST';
   const successText = editId ? 'movie updated' : 'movie added';
 
   try {
     const res = await fetch(url, {
-      method: method,
+      method,
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(movie)
+      body: JSON.stringify(movie),
     });
     if (!res.ok) throw new Error(`Error ${res.status}`);
     form.reset();
@@ -111,7 +128,6 @@ async function saveMovie(e) {
 }
 form.addEventListener('submit', saveMovie);
 
-// Edit / Delete: delegation
 tbody.addEventListener('click', async (e) => {
   const tr = e.target.closest('tr');
   if (!tr) return;
@@ -120,17 +136,17 @@ tbody.addEventListener('click', async (e) => {
   if (e.target.classList.contains('edit')) {
     const res = await fetch(`${API_URL}/${id}`);
     const movie = await res.json();
-    titleInput.value = movie.title;
-    typeInput.value = movie.type;
-    yearInput.value = movie.releaseYear;
-    durationInput.value = movie.duration;
-    seasonsInput.value = movie.seasons;
-    posterInput.value = movie.image;
-    descriptionInput.value = movie.description;
-    genresInput.value = movie.genres;
-    directorsInput.value = movie.directors;
-    countriesInput.value = movie.productionCountries;
+    titleInput.value = movie.title || '';
+    typeInput.value = movie.type || 'Movie';
     showFields();
+    yearInput.value = movie.releaseYear || '';
+    durationInput.value = movie.duration || '';
+    seasonsInput.value = fromList(movie.seasons);
+    posterInput.value = movie.image || '';
+    descriptionInput.value = movie.description || '';
+    genresInput.value = fromList(movie.genres);
+    directorsInput.value = fromList(movie.directors);
+    countriesInput.value = fromList(movie.productionCountries);
     editId = id;
     submitBtn.textContent = 'Save';
     titleInput.focus();

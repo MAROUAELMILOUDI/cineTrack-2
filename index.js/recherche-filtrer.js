@@ -1,24 +1,26 @@
-
-
-export function handelFiltrer(movies, afficherCards){
+export function handelFiltrer(movies, afficherCards) {
     const searchMovies = document.getElementById("movies");
     const statutSelector = document.getElementById("statut");
-    const movie = searchMovies.value.toLowerCase().trim();
+    const query = searchMovies.value.toLowerCase().trim();
     const statut = statutSelector.value;
-    const filtreMovies = movies.filter((film) =>{
-        const matchMovies = film.title.toLowerCase().includes(movie);
+
+    const filtreMovies = movies.filter((film) => {
+        const matchMovies = (film.title || "").toLowerCase().includes(query);
+        const filmType = (film.type || "").toLowerCase();
+
         let matchStatut = false;
-        if(statut === "all"){
+        if (statut === "all") {
             matchStatut = true;
         }
-        if(statut === "movies"){
-            matchStatut = film.type === "movie";
+        if (statut === "movies") {
+            matchStatut = filmType === "movie" || filmType === "movies";
         }
-        if(statut === "series"){
-            matchStatut = film.type === "series";
+        if (statut === "series") {
+            matchStatut = filmType === "series" || filmType === "serie";
         }
+
         return matchStatut && matchMovies;
     });
+
     afficherCards(filtreMovies);
 }
-
